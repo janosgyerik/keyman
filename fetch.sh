@@ -58,6 +58,7 @@ done
 eval "set -- $args"  # save arguments in $@. Use "$@" in for loops, not $@ 
 
 authorizations=./authorizations
+keys=./keys
 
 cd $(dirname "$0")
 mkdir -p $authorizations
@@ -76,6 +77,7 @@ for remote; do
         sftp $remote:.ssh/authorized_keys $target
         rm -f $targetdir/*.pub
         ./extract-keys.sh $target -d $targetdir
+        ./extract-keys.sh $target -d $keys
     fi
 done
 
