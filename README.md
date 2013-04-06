@@ -17,17 +17,23 @@ Commands
 --------
 All commands accept `-h` or `--help` flag to print a help message.
 
-- TODO: authorize host key...
-
-- TODO: revoke host key...
-
 - Download remote `.ssh/authorized_keys` file and extract public keys:
 
         ./fetch.sh host...
 
-- TODO: push host...
+- Update `authorized_keys` on remote host based on local authorization info:
 
-- Extract keys from an `authorized_keys` file to separate files
+        ./push.sh host...
+
+- TODO: Authorize public keys on remote host:
+
+        ./add.sh host key...
+
+- TODO: Revoke public keys on remote host:
+
+        ./revoke.sh host key...
+
+- Extract keys from an `authorized_keys` file to separate files:
 
         ./extract-keys.sh file...
 
