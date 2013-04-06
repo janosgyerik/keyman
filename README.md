@@ -15,14 +15,18 @@ the authorized keys from time to time, for example:
 
 Commands
 --------
-TODO
+All commands accept `-h` or `--help` flag to print a help message.
 
 - TODO: authorize host key...
 
 - TODO: revoke host key...
 
-- TODO: fetch host...
+- Download remote `.ssh/authorized_keys` file and extract public keys:
+
+        ./fetch.sh host...
 
 - TODO: push host...
+
+- TODO: extract-keys authorized-keys-file...
 
 
