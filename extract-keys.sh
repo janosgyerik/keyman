@@ -35,6 +35,7 @@ args=
 #flag=off
 #param=
 dir=
+force=off
 while [ $# != 0 ]; do
     case $1 in
     -h|--help) usage ;;
@@ -42,6 +43,8 @@ while [ $# != 0 ]; do
 #    --no-flag) flag=off ;;
 #    -p|--param) shift; param=$1 ;;
     -d|--dir) shift; dir=$1 ;;
+    -f|--force) force=on ;;
+    --no-force) force=off ;;
 #    --) shift; while [ $# != 0 ]; do args="$args \"$1\""; shift; done; break ;;
     -) usage "Unknown option: $1" ;;
     -?*) usage "Unknown option: $1" ;;
@@ -60,9 +63,13 @@ test "$dir" || usage 'Error: specify the target directory using -d or --dir'
 for authorized_keys_file; do
     while read line; do
         name=$(echo $line | awk '{print $NF}')
-        pubkey_file="$dir/$name.pub"
-        echo '* writing public key to '$pubkey_file
-        echo $line > $pubkey_file
+        target="$dir/$name.pub"
+        if test -s $target -a $force = off; then
+            echo '* file exists, skipping:' $target
+        else
+            echo '* writing public key to '$target
+            echo $line > $target
+        fi
     done < "$authorized_keys_file"
 done
 
