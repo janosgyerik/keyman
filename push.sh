@@ -62,13 +62,8 @@ for remote; do
     cat $authorizations/$remote/*.pub > $authorizations/$remote/authorized_keys
 
     cmdfile=$authorizations/$remote/sftp.cmd
-    echo mkdir .ssh > $cmdfile
-    echo '* creating .ssh directory on remote:'$remote
-    sftp -b $cmdfile $remote >/dev/null 2>/dev/null
-
     echo '* pushing authorized_keys file to remote:'$remote
-    echo chmod 0700 .ssh > $cmdfile
-    echo put $authorizations/$remote/authorized_keys .ssh/ >> $cmdfile
+    echo put $authorizations/$remote/authorized_keys .ssh/ > $cmdfile
     sftp -b $cmdfile $remote
     rm -f $cmdfile
 done

@@ -25,14 +25,6 @@ All commands accept `-h` or `--help` flag to print a help message.
 
         ./push.sh host...
 
-- TODO: Authorize public keys on remote host:
-
-        ./add.sh host key...
-
-- TODO: Revoke public keys on remote host:
-
-        ./revoke.sh host key...
-
 - Extract keys from an `authorized_keys` file to separate files:
 
         ./extract-keys.sh file...
