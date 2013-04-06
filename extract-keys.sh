@@ -1,6 +1,6 @@
-#!/bin/sh -e
+#!/bin/sh
 #
-# SCRIPT: fetch.sh
+# SCRIPT: extract-keys.sh
 # AUTHOR: Janos Gyerik <info@titan2x.com>
 # DATE:   2012-07-01
 # REV:    1.0.D (Valid are A, B, D, T and P)
@@ -8,8 +8,7 @@
 #
 # PLATFORM: Not platform dependent
 #
-# PURPOSE: Download .ssh/authorized_keys from specified or configured
-#          accounts and extract public keys.
+# PURPOSE: Extract public keys from an authorized_keys file to separate files
 #
 # set -n   # Uncomment to check your syntax, without execution.
 #          # NOTE: Do not forget to put the comment back in or
@@ -19,15 +18,14 @@
 
 usage() {
     test $# = 0 || echo $@
-    echo "Usage: $0 [OPTION]... [HOST]..."
+    echo "Usage: $0 [OPTION]... [ARG]..."
     echo
-    echo Download .ssh/authorized_keys and extract public keys
+    echo Extract public keys from an authorized_keys file to separate files
     echo
     echo Options:
+    echo "  -d, --dir DIR  default = $dir"
     echo
     echo "  -h, --help     Print this help"
-    echo
-    echo "  -f, --force    Overwrite if local authorized_keys exists"
     echo
     exit 1
 }
@@ -36,15 +34,14 @@ args=
 #arg=
 #flag=off
 #param=
-force=off
+dir=
 while [ $# != 0 ]; do
     case $1 in
     -h|--help) usage ;;
 #    -f|--flag) flag=on ;;
 #    --no-flag) flag=off ;;
-    -f|--force) force=on ;;
-    --no-force) force=off ;;
 #    -p|--param) shift; param=$1 ;;
+    -d|--dir) shift; dir=$1 ;;
 #    --) shift; while [ $# != 0 ]; do args="$args \"$1\""; shift; done; break ;;
     -) usage "Unknown option: $1" ;;
     -?*) usage "Unknown option: $1" ;;
@@ -57,26 +54,16 @@ done
 
 eval "set -- $args"  # save arguments in $@. Use "$@" in for loops, not $@ 
 
-authorizations=./authorizations
+test $# -gt 0 || usage
+test "$dir" || usage 'Error: specify the target directory using -d or --dir'
 
-cd $(dirname "$0")
-mkdir -p $authorizations
-
-test $# -gt 0 || set -- $(ls accounts)
-
-for remote; do
-    target=$authorizations/$remote/authorized_keys
-    if test -s $target -a $force = off; then
-        echo '* file exists, skipping:' $target
-        continue
-    else
-        echo '* downloading authorized_keys from remote:'$remote
-        targetdir=$(dirname "$target")
-        mkdir -p $targetdir
-        sftp $remote:.ssh/authorized_keys $target
-        rm -f $targetdir/*.pub
-        ./extract-keys.sh $target -d $targetdir
-    fi
+for authorized_keys_file; do
+    while read line; do
+        name=$(echo $line | awk '{print $NF}')
+        pubkey_file="$dir/$name.pub"
+        echo '* writing public key to '$pubkey_file
+        echo $line > $pubkey_file
+    done < "$authorized_keys_file"
 done
 
 # eof

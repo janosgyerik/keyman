@@ -27,6 +27,8 @@ All commands accept `-h` or `--help` flag to print a help message.
 
 - TODO: push host...
 
-- TODO: extract-keys authorized-keys-file...
+- Extract keys from an `authorized_keys` file to separate files
+
+        ./extract-keys.sh file...
 
 
