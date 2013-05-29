@@ -24,6 +24,8 @@ usage() {
     echo
     echo Options:
     echo
+    echo "      --all      Push to all configured hosts (be careful!)"
+    echo
     echo "  -h, --help     Print this help"
     echo
     exit 1
@@ -33,11 +35,14 @@ args=
 #arg=
 #flag=off
 #param=
+all=off
 while [ $# != 0 ]; do
     case $1 in
     -h|--help) usage ;;
 #    -f|--flag) flag=on ;;
 #    --no-flag) flag=off ;;
+    --all) all=on ;;
+    --no-all) all=off ;;
 #    -p|--param) shift; param=$1 ;;
 #    --) shift; while [ $# != 0 ]; do args="$args \"$1\""; shift; done; break ;;
     -) usage "Unknown option: $1" ;;
@@ -55,7 +60,7 @@ authorizations=./authorizations
 
 cd $(dirname "$0")
 
-test $# -gt 0 || set -- $(ls authorizations)
+test $all = on && set -- $(ls authorizations)
 
 for remote; do
     echo '* preparing authorized_keys file for remote:'$remote
