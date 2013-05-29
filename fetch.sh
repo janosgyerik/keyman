@@ -25,6 +25,8 @@ usage() {
     echo
     echo Options:
     echo
+    echo "      --all      Download from all configured hosts (be careful!)"
+    echo
     echo "  -h, --help     Print this help"
     echo
     echo "  -f, --force    Overwrite if local authorized_keys exists"
@@ -36,12 +38,15 @@ args=
 #arg=
 #flag=off
 #param=
+all=off
 force=off
 while [ $# != 0 ]; do
     case $1 in
     -h|--help) usage ;;
 #    -f|--flag) flag=on ;;
 #    --no-flag) flag=off ;;
+    --all) all=on ;;
+    --no-all) all=off ;;
     -f|--force) force=on ;;
     --no-force) force=off ;;
 #    -p|--param) shift; param=$1 ;;
@@ -63,7 +68,7 @@ keys=./keys
 cd $(dirname "$0")
 mkdir -p $authorizations
 
-test $# -gt 0 || set -- $(ls accounts)
+test $all = on && set -- $(ls $authorizations)
 
 for remote; do
     target=$authorizations/$remote/authorized_keys
