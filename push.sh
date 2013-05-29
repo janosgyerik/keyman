@@ -56,11 +56,12 @@ done
 
 eval "set -- $args"  # save arguments in $@. Use "$@" in for loops, not $@ 
 
-authorizations=./authorizations
+private=./private
+authorizations=$private/authorizations
 
 cd $(dirname "$0")
 
-test $all = on && set -- $(ls authorizations)
+test $all = on && set -- $(ls $authorizations)
 
 for remote; do
     echo '* preparing authorized_keys file for remote:'$remote

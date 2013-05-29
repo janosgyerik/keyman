@@ -29,4 +29,13 @@ All commands accept `-h` or `--help` flag to print a help message.
 
         ./extract-keys.sh file...
 
+    You should not need to use this script directly.
+
+
+Notes
+-----
+Authorization information is stored in the directory `./private` and
+is set to be ignored by Git. You may want to convert that directory
+to a Git repository and store it on your private server.
+
 

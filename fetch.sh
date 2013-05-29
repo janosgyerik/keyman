@@ -62,11 +62,13 @@ done
 
 eval "set -- $args"  # save arguments in $@. Use "$@" in for loops, not $@ 
 
-authorizations=./authorizations
-keys=./keys
+private=./private
+authorizations=$private/authorizations
+keys=$private/keys
 
 cd $(dirname "$0")
 mkdir -p $authorizations
+mkdir -p $keys
 
 test $all = on && set -- $(ls $authorizations)
 
