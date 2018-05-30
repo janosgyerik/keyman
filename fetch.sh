@@ -47,23 +47,23 @@ authorizations=$private/authorizations
 keys=$private/keys
 
 cd $(dirname "$0")
-mkdir -p $authorizations
-mkdir -p $keys
+mkdir -p "$authorizations"
+mkdir -p "$keys"
 
-test $all = on && set -- $(ls $authorizations)
+test $all = on && set -- $(command ls $authorizations)
 
 for remote; do
     target=$authorizations/$remote/authorized_keys
-    if test -s $target -a $force = off; then
+    if test -s "$target" -a $force = off; then
         echo "* file exists, skipping: $target"
         continue
-    else
-        echo "* downloading authorized_keys from remote: $remote"
-        targetdir=$(dirname "$target")
-        mkdir -p $targetdir
-        sftp $remote:.ssh/authorized_keys $target
-        rm -f $targetdir/*.pub
-        ./extract-keys.sh $target -d $targetdir
-        ./extract-keys.sh $target -d $keys
     fi
+
+    echo "* downloading authorized_keys from remote: $remote"
+    targetdir=$(dirname "$target")
+    mkdir -p "$targetdir"
+    sftp "$remote:.ssh/authorized_keys" "$target"
+    rm -f "$targetdir/"*.pub
+    ./extract-keys.sh "$target" -d "$targetdir"
+    ./extract-keys.sh "$target" -d "$keys"
 done
