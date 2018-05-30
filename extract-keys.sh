@@ -30,7 +30,7 @@ while [ $# != 0 ]; do
     --no-force) force=off ;;
     -) usage "Unknown option: $1" ;;
     -?*) usage "Unknown option: $1" ;;
-    *) args+="$1" ;;
+    *) args+=("$1") ;;
     esac
     shift
 done
