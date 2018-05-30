@@ -40,15 +40,21 @@ set -- "${args[@]}"
 test $# = 0 && usage
 test "$dir" || usage 'Error: specify the target directory using -d or --dir'
 
+unknown_counter=0
 for authorized_keys_file; do
     while read line; do
-        name=$(awk '{print $NF}' <<< "$line")
+        read _ _ name <<< "$line" || :
+        if ! test "$name"; then
+            unknown_counter=$((unknown_counter + 1))
+            name=unknown$unknown_counter
+        fi
+
         target="$dir/$name.pub"
         if test -s $target -a $force = off; then
             echo "* file exists, skipping: $target"
         else
             echo "* writing public key to $target"
-            echo "$line" > $target
+            echo "$line" > "$target"
         fi
     done < "$authorized_keys_file"
 done
